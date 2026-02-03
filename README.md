@@ -21,6 +21,14 @@ The team enters the market every two weeks with one goal: **Delete the Floor.**
 * **Casualties:** The team market-buys the lowest-priced NFTs.
 * **The Furnace:** Purchased NFTs are sent to a dead address forever.
 
+### 3: The Purge Execution (Strategic Manual Sweep)
+To ensure absolute fairness and adherence to protocol logic, "The Purge" is executed manually. This prevents "Dumb Bots" from sweeping the wrong assets and allows for precise tie-breaking:
+
+1. **Scan:** The team identifies all NFTs listed at the current floor price.
+2. **Priority Tie-Breaker:** In the event that multiple NFTs are listed at the same price, the team cross-references the **Sweep Score** (Mint Priority).
+3. **Selection:** The NFT with the **Highest Sweep Score** (earlier mint) is selected for the Purge first. 
+4. **Execution:** This creates a tactical advantage for early minters: their "Floor Shield" is stronger, as they will be the first to be bought out by the team if they choose to exit at the floor.
+
 ---
 
 ## 🛡️ Survival Mechanics
