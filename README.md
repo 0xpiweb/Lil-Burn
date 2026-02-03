@@ -21,7 +21,7 @@ The team enters the market every two weeks with one goal: **Delete the Floor.**
 * **Casualties:** The team market-buys the lowest-priced NFTs.
 * **The Furnace:** Purchased NFTs are sent to a dead address forever.
 
-### 3: The Purge Execution (Strategic Manual Sweep)
+### 3. The Purge Execution (Strategic Manual Sweep)
 To ensure absolute fairness and adherence to protocol logic, "The Purge" is executed manually. This prevents "Dumb Bots" from sweeping the wrong assets and allows for precise tie-breaking:
 
 1. **Scan:** The team identifies all NFTs listed at the current floor price.
