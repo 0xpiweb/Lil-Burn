@@ -35,6 +35,54 @@ To ensure absolute fairness and adherence to protocol logic, "The Purge" is exec
 
 ---
 
+## 🏗️ Architecture Overview
+
+The Lil-Burn ecosystem is a closed-loop deflationary engine that converts NFT mint revenue and community contributions into persistent buy-pressure on the Avalanche C-Chain.
+
+```mermaid
+graph TD
+    %% Revenue Streams
+    A[Mint Revenue: 2,000 $AVAX] --> B{Treasury Split}
+    B -->|90%| C[DeFi Multi-sig Wallet]
+    B -->|10%| D[Operational Wallet]
+    E[Community War Chest] -->|Donations| F[Node.js Indexer]
+    
+    %% Yield Engine (Manual DeFi)
+    C -->|Manual Swap| G[Pharaoh Exchange: $PHAR]
+    G -->|Convert| H[xPHAR Autovaults]
+    H -->|Harvest| I[WAVAX Yield: 15.27+ Accrued]
+    
+    %% Data Layer
+    F -->|Real-time Sync| J[(Backend Database)]
+    J -->|API| K[War Chest Leaderboard]
+    J -->|Metadata Logic| L[Cursed 100 Gallery]
+    
+    %% Execution (Floor War)
+    I -->|Funding| M[Manual Sweep Wallet]
+    M -->|Strategic Snipe| N[Secondary Markets: Salvor/Joepegs]
+    N -->|Burn Transaction| O[0x00...dead Burn Address]
+    
+    %% Final Verification
+    O -->|Supply Update| P[Yield Page Dashboard]
+    O -->|ID Status Update| L
+```
+
+### 1. Technical Component Breakdown
+
+* **Yield Engine**: A team-managed DeFi strategy. 1,800 $AVAX is systematically swapped for **$PHAR** and staked as xPHAR on Pharaoh Exchange. This generates continuous $WAVAX yield used for market buy-backs.
+* **The War Chest**: A donation-based smart contract that triggers a Node.js indexer. It records donor data in a PostgreSQL/MongoDB database to serve the real-time Quarterly Leaderboard.
+* **Cursed ID Tracker**: A database-driven gallery that cross-references the "Cursed 100" NFT metadata against the burn address, allowing users to filter "At-Large" vs. "Graveyarded" assets.
+
+### 2. Technical Stack
+
+* **Smart Contracts**: Solidity (Avalanche C-Chain).
+* **Frontend**: Next.js, Tailwind CSS.
+* **Web3 Integration**: WalletConnect with custom network-switching logic.
+* **Backend**: Node.js, Express, Database (for Leaderboards/Metadata).
+* **DeFi Integration**: Pharaoh Exchange (xPHAR Autovaults).
+
+---
+
 ## 🛡️ Survival Mechanics
 
 ### 1. Sweep Score (Priority & Tie-Breaker)
