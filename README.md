@@ -8,7 +8,11 @@ Lil Burn is a tactical NFT protocol where survival is the only goal. By deployin
 ## ⚙️ The Protocol
 
 ### 1. Yield & Harvest
-* **The Deployment:** 90% of all Mint Funds are locked into high-efficiency Avalanche DeFi protocols to work.
+* **The Deployment:** Following the 1,000 NFT mint, the treasury executes a strategic deployment into the Pharaoh Exchange ecosystem:
+  * **Strategic Swap**: **90% of $AVAX mint funds** are converted into $PHAR.
+  * **$xPHAR Conversion**: All acquired $PHAR is committed to the xPHAR governance layer, securing a long-term, yield-bearing position.
+  * **Autovault Staking**: The xPHAR is staked in Pharaoh’s **Automated autovault**, maximizing yield while eliminating manual management.
+    
 * **The 80/20 Efficiency Rule:** Yield is harvested bi-weekly and distributed:
     * 🔥 **80% (The Purge Fund):** Used exclusively to sweep the Lil Burn floor.
     * 🐓 **5%:** Lil Coq Rewards (supporting ecosystem project).
