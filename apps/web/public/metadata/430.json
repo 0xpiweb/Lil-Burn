@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #430",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Night%20Watchman.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Night Watchman"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 579
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

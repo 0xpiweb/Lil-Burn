@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #523",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Black%20Prince.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Black Prince"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 486
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

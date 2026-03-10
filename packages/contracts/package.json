@@ -1,0 +1,24 @@
+{
+  "name": "@lilburn/contracts",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "hardhat run scripts/start-simulated-network.ts",
+    "build": "hardhat build",
+    "test": "hardhat test"
+  },
+  "dependencies": {
+    "@lilburn/types": "*"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ignition": "^3.0.8",
+    "@nomicfoundation/hardhat-toolbox-viem": "^5.0.2",
+    "@nomicfoundation/hardhat-verify": "^3.0.11",
+    "@openzeppelin/contracts": "^5.6.1",
+    "@types/node": "^25.3.3",
+    "forge-std": "github:foundry-rs/forge-std#v1.15.0",
+    "hardhat": "^3.1.10",
+    "typescript": "~5.9.3",
+    "viem": "^2.47.0"
+  }
+}

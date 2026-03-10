@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #854",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Mafia%20Enforcer.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Mafia Enforcer"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 155
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

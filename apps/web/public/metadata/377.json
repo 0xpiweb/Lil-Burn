@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #377",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Street%20Boss.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Street Boss"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 632
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

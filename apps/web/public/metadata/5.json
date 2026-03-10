@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #5",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/DYDX%20-%20Ice%20Crystal.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "DYDX"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Ice Crystal"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 1000
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

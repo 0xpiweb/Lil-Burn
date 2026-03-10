@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #7",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/CRYPTOMANCER%20-%20Lil-DeepDive.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "CRYPTOMANCER"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Lil-DeepDive"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 1000
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

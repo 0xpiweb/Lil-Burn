@@ -1,0 +1,10 @@
+/.next/
+/out/
+/build
+/coverage
+.vercel
+next-env.d.ts
+/data/holder-tree-localhost.json
+/data/whitelist-tree-localhost.json
+*.db
+*.db-journal

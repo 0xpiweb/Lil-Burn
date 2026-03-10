@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #743",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Fallen%20Prince.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Fallen Prince"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 266
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

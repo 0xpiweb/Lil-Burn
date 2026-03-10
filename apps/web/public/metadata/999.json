@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #999",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Gold%20Digger.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Gold Digger"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 10
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

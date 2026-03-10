@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #6",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/SHOLEX%20-%20Warborn%20Requiem.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "SHOLEX"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Warborn Requiem"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 1000
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

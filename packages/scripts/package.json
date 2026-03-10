@@ -1,0 +1,25 @@
+{
+  "name": "@lilburn/scripts",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "generate-snapshot": "tsx src/generate-snapshot.ts",
+    "generate-holder-merkle-tree": "tsx src/generate-holder-merkle-tree.ts",
+    "generate-whitelist-merkle-tree": "tsx src/generate-whitelist-merkle-tree.ts",
+    "generate-metadata": "tsx src/generate-metadata.ts",
+    "verify-metadata": "tsx src/verify-metadata.ts",
+    "verify-snapshot": "tsx src/verify-snapshot.ts"
+  },
+  "dependencies": {
+    "@lilburn/contracts": "*",
+    "@lilburn/types": "*",
+    "@openzeppelin/merkle-tree": "^1.0.8",
+    "viem": "^2.45.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.8",
+    "tsx": "^4.19.4",
+    "typescript": "~5.8.0"
+  }
+}

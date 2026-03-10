@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #188",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Gem%20Lord.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Gem Lord"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 821
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

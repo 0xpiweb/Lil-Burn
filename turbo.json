@@ -1,0 +1,26 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": ["TURBO_TELEMETRY_DISABLED"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "dist/**", "artifacts/**"]
+    },
+    "generate": {
+      "dependsOn": ["@lilburn/contracts#build"],
+      "inputs": ["wagmi.config.ts", "../../packages/contracts/artifacts/**"],
+      "outputs": ["generated.ts"]
+    },
+    "dev": {
+      "dependsOn": ["^dev", "generate"],
+      "cache": false
+    },
+    "test": {
+      "dependsOn": ["^test"],
+      "outputs": ["coverage/**"]
+    },
+    "@lilburn/contracts#test": {
+      "dependsOn": ["@lilburn/contracts#build"]
+    }
+  }
+}

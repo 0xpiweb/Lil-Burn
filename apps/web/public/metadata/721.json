@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #721",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Berlin%20Punk.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Berlin Punk"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 288
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

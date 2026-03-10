@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #8",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/MOCKET%20-%20Big%20Lil%20Black%20Coq.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "MOCKET"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Big Lil Black Coq"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 1000
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #19",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Swamp%20Prince.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Swamp Prince"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 990
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

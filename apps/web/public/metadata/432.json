@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #432",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Lightning%20Master.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Lightning Master"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 577
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

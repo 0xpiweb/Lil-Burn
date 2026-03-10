@@ -1,0 +1,11 @@
+{
+  "name": "@lilburn/types",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "viem": "^2.45.0"
+  }
+}

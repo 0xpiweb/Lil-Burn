@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #4",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/CedriCDebleD%20-%20Not%20So%20LiL%20%E2%80%9CFurious%E2%80%9D%20B.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "CedriCDebleD"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Not So LiL “Furious” B"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 1000
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

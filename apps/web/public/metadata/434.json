@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #434",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Casino%20Pimp.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Casino Pimp"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 575
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

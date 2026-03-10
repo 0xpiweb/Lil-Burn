@@ -1,0 +1,27 @@
+{
+  "name": "lilburn",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "node --env-file=.env $(which turbo) run dev",
+    "build": "node --env-file=.env $(which turbo) run build",
+    "test": "node --env-file=.env $(which turbo) run test",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.3.2",
+    "prettier": "^3.8.1",
+    "prettier-plugin-organize-imports": "^4.3.0",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "turbo": "^2.8.3"
+  },
+  "type": "module",
+  "packageManager": "npm@11.6.2",
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs,cjs,json,css,md}": "prettier --write"
+  }
+}

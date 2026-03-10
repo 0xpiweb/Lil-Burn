@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #821",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Graveyard%20Sleepwalker.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Graveyard Sleepwalker"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 188
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #105",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Wizard%20of%20the%20Dead.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Wizard of the Dead"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 904
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

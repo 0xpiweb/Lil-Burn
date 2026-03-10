@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #620",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Evil%20Knight.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Evil Knight"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 389
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

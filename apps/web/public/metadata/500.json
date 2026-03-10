@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #500",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Darkness%20Vampire.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Darkness Vampire"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 509
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

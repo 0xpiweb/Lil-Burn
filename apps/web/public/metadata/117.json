@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #117",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Night%20Thief.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Night Thief"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 892
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

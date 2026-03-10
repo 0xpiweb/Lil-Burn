@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #883",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Castle%20Guardian.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Castle Guardian"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 126
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

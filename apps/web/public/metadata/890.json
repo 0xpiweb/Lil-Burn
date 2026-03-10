@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #890",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Street%20Hypnoptist.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Street Hypnoptist"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 119
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

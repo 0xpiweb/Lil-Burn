@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #706",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Graveyard%20Watcher.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Graveyard Watcher"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 303
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}

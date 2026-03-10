@@ -1,0 +1,23 @@
+{
+  "name": "Lil-B #739",
+  "description": "LilBurn NFT",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20Space%20Robot.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Lil-B"
+    },
+    {
+      "trait_type": "F1R3 Crew",
+      "value": "Space Robot"
+    },
+    {
+      "trait_type": "Sweep Score",
+      "value": 270
+    },
+    {
+      "trait_type": "Cursed",
+      "value": "Unrevealed"
+    }
+  ]
+}
