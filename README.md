@@ -6,7 +6,16 @@ Lil Burn is a tactical NFT protocol where survival is the only goal. By deployin
 
 ---
 
-## ⚙️ The Protocol
+## Project Status & Timeline
+
+- **✅ Mint Completed:** 3-phase launch successfully concluded (March 4–5, 2026). Public phase sold out in **13 minutes**.
+- **✅ Capital Deployed:** **1,800 $AVAX** (90% of total proceeds) converted to **$PHAR/$xPHAR** and staked in Pharaoh autovaults.
+- **✅ Yield Active:** Initial **15.27 $AVAX** yield already harvested and secured in the Sweep Wallet for the March 19th Purge.
+- **✅ Security:** **SHA-256 Hashed Manifest** published and embedded in the contract for pre-determined game fairness.
+
+---
+
+## The Protocol
 
 ### 1. Yield & Harvest (Active Status: Deployed)
 
@@ -43,7 +52,7 @@ To ensure absolute fairness and adherence to protocol logic, "The Purge" is exec
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 The Lil-Burn ecosystem is a closed-loop deflationary engine that converts NFT mint revenue and community contributions into persistent buy-pressure on the Avalanche C-Chain.
 
@@ -97,7 +106,7 @@ graph TD
 
 ---
 
-## 🛡️ Survival Mechanics
+## Survival Mechanics
 
 ### 1. Sweep Score (Priority & Tie-Breaker)
 
@@ -122,7 +131,7 @@ A transparent, public wallet where 100% of voluntary contributions are used to b
 
 ---
 
-## 💀 The Endgame
+## The Endgame
 
 ### 1. The Cursed 100 (The Landmines)
 
@@ -141,7 +150,7 @@ When the supply hits 100, the burn stops.
 
 ---
 
-## 🔗 Official Links
+## Official Links
 
 - Website [lilburn.xyz](https://www.lilburn.xyz/)
 - Whitepaper [GitBook](https://lil-ecosystem.gitbook.io/lil-burn)
