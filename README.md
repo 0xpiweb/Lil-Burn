@@ -16,7 +16,7 @@ Lil Burn is a tactical NFT protocol where survival is the only goal. By deployin
   - **Autovault Staking**: The xPHAR is currently staked in Pharaoh’s **autovault**, generating continuous $WAVAX yield.
 - **Current Performance:**
   - **Total Staked**: 1,800 $AVAX equivalent in xPHAR.
-  - **Accrued Yield**: **12.23 $WAVAX** already harvested and held in the Buy-backs Wallet for the March 12th Purge.
+  - **Accrued Yield**: **15.27 $WAVAX** already harvested, 80% being held in the Buy-backs Wallet for the March 12th Purge.
     
 - **The 80/20 Efficiency Rule:** Yield is harvested bi-weekly and distributed:
   - 🔥 **80% (The Purge Fund):** Used exclusively to sweep the Lil Burn floor.
