@@ -8,12 +8,16 @@ Lil Burn is a tactical NFT protocol where survival is the only goal. By deployin
 
 ## ⚙️ The Protocol
 
-### 1. Yield & Harvest
+### 1. Yield & Harvest (Active Status: Deployed)
 
-- **The Deployment:** Following the 1,000 NFT mint, the treasury executes a strategic deployment into the Pharaoh Exchange ecosystem:
-  - **Strategic Swap**: **90% of $AVAX mint funds** are converted into $PHAR.
-  - **$xPHAR Conversion**: All acquired $PHAR is committed to the xPHAR governance layer, securing a long-term, yield-bearing position.
-  - **Autovault Staking**: The xPHAR is staked in Pharaoh’s **Automated autovault**, maximizing yield while eliminating manual management.
+- **The Execution:** Following the 100% sell-out of the 1,000 NFT collection, the protocol has finalized its core capital deployment:
+  - **1,800 $AVAX Deployed**: 90% of total mint proceeds have been swapped for **$PHAR** and converted into **xPHAR**.
+  - **Transparency**: All deployment transactions are verifiable via the official [DeFi Wallet](https://snowtrace.io/address/0x4E028063928b3135a6f74eD5543F5Cfae6D22F97).
+  - **Autovault Staking**: The xPHAR is currently staked in Pharaoh’s **autovault**, generating continuous $WAVAX yield.
+- **Current Performance:**
+  - **Total Staked**: 1,800 $AVAX equivalent in xPHAR.
+  - **Accrued Yield**: **12.23 $WAVAX** already harvested and held in the Buy-backs Wallet for the March 12th Purge.
+    
 - **The 80/20 Efficiency Rule:** Yield is harvested bi-weekly and distributed:
   - 🔥 **80% (The Purge Fund):** Used exclusively to sweep the Lil Burn floor.
   - 🐓 **5%:** Lil Coq Rewards (supporting ecosystem project).
@@ -74,7 +78,7 @@ graph TD
 ### 1. Technical Component Breakdown
 
 - **Yield Engine**: A team-managed DeFi strategy. 1,800 $AVAX is systematically swapped for $PHAR and staked as xPHAR on Pharaoh Exchange. This generates continuous $WAVAX yield used for market buy-backs.
-- **The War Chest**: A donation-based smart contract that triggers a Node.js indexer. It records donor data in a PostgreSQL/MongoDB database to serve the real-time Quarterly Leaderboard.
+- **The War Chest**: A donation-based smart contract that triggers a Node.js indexer. It records donor data in a LiteSQL database to serve the real-time Quarterly Leaderboard.
 - **Cursed ID Tracker**: A database-driven gallery that cross-references the "Cursed 100" NFT metadata against the burn address, allowing users to filter "At-Large" vs. "Graveyarded" assets.
 
 
