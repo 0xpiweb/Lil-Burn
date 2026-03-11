@@ -1,10 +1,5 @@
 # 🔥 Lil Burn (Lil-B)
 
-- `apps/web` DAPP
-- `packages/contracts` Smart contracts
-- `packages/scripts` Snapshot, merkle tree, and metadata generation scripts
-- `packages/types` Shared types
-
 ### A Hyper-Deflationary NFT Survival Experiment on Avalanche
 
 Lil Burn is a tactical NFT protocol where survival is the only goal. By deploying 90% of mint funds into Avalanche DeFi, the protocol generates autonomous yield to systematically buy back and burn the supply until only the **Final 100 Elite** remain.
@@ -78,9 +73,10 @@ graph TD
 
 ### 1. Technical Component Breakdown
 
-- **Yield Engine**: A team-managed DeFi strategy. 1,800 $AVAX is systematically swapped for **$PHAR\*\* and staked as xPHAR on Pharaoh Exchange. This generates continuous $WAVAX yield used for market buy-backs.
+- **Yield Engine**: A team-managed DeFi strategy. 1,800 $AVAX is systematically swapped for $PHAR and staked as xPHAR on Pharaoh Exchange. This generates continuous $WAVAX yield used for market buy-backs.
 - **The War Chest**: A donation-based smart contract that triggers a Node.js indexer. It records donor data in a PostgreSQL/MongoDB database to serve the real-time Quarterly Leaderboard.
 - **Cursed ID Tracker**: A database-driven gallery that cross-references the "Cursed 100" NFT metadata against the burn address, allowing users to filter "At-Large" vs. "Graveyarded" assets.
+
 
 ### 2. Technical Stack
 
@@ -89,6 +85,11 @@ graph TD
 - **Web3 Integration**: WalletConnect with custom network-switching logic.
 - **Backend**: Node.js, Express, Database (for Leaderboards/Metadata).
 - **DeFi Integration**: Pharaoh Exchange (xPHAR Autovaults).
+
+- `apps/web` dAPP
+- `packages/contracts` Smart contracts
+- `packages/scripts` Snapshot, merkle tree, and metadata generation scripts
+- `packages/types` Shared types
 
 ---
 
@@ -125,6 +126,7 @@ There are 100 "Cursed" NFT IDs hidden in the supply.
 
 - **The Reveal:** As supply milestones (800, 600, etc.) are hit, the "Hashed Manifest" decrypts, revealing which IDs are Cursed.
 - **The Strategy:** If your NFT is revealed as Cursed, you must use the Floor War to get swept/bought by the team. Cursed NFTs that reach the final 100 are **disqualified** from rewards.
+- **The Hashed Manifest SHA-256** 77ed49d91ee65ff336660c769544e252a9d5ccb4a2fe2d428adbbc2a38b5b314
 
 ### 2. The Final 100 Elite
 
@@ -137,6 +139,19 @@ When the supply hits 100, the burn stops.
 
 ## 🔗 Official Links
 
-- [Documentation](https://lil-ecosystem.gitbook.io/lil-burn)
-- [Twitter](https://x.com/LilCoqNft)
-- [Discord](https://discord.gg/uKSF7R2dJd)
+- Website [lilburn.xyz](https://www.lilburn.xyz/)
+- Whitepaper [GitBook](https://lil-ecosystem.gitbook.io/lil-burn)
+
+- Contract [0xf3513f263994a3536cc0a684209013d6808fe443](https://snowtrace.io/address/0xf3513f263994a3536cc0a684209013d6808fe443)
+- Mint Wallet [0x4d9C3d09109E7F31398FfE9d3c89F05c869eFafe](https://snowtrace.io/address/0x4d9C3d09109E7F31398FfE9d3c89F05c869eFafe)
+- DeFi Wallet [0x4E028063928b3135a6f74eD5543F5Cfae6D22F97](https://snowtrace.io/address/0x4E028063928b3135a6f74eD5543F5Cfae6D22F97)
+- Buy-backs Wallet [0x77f2F497a5649C62ed495A6588cF5Ad9E04dea79](https://snowtrace.io/address/0x77f2F497a5649C62ed495A6588cF5Ad9E04dea79)
+- Burn Address [0x000000000000000000000000000000000000dEaD](https://snowtrace.io/address/0x000000000000000000000000000000000000dEaD)
+
+- Marketplaces:
+[Joepegs](https://joepegs.com/collections/avalanche/0xf3513f263994a3536cc0a684209013d6808fe443)
+[Salvor](https://salvor.io/collections/0xf3513f263994a3536cc0a684209013d6808fe443)
+
+- Socials:
+[Twitter](https://x.com/LilCoqNft)
+[Discord](https://discord.gg/uKSF7R2dJd)
