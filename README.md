@@ -13,6 +13,14 @@ Lil Burn is a tactical NFT protocol where survival is the only goal. By deployin
 - **✅ Yield Active:** Initial **15.27 $AVAX** yield already harvested, 80% secured in the Buy-backs Wallet for the March 12th Purge.
 - **✅ Security:** **SHA-256 Hashed Manifest** shared publicly for pre-determined game fairness.
 
+## Live Statistics (The Purge: Week 1)
+
+- **✅ First Sweep Completed:** March 12, 2026 (Live-streamed on Blaze).
+- **✅ Yield Generated:** **38.39 $AVAX** produced by the xPHAR Yield Engine.
+- **✅ Buyback Budget:** **30.71 $AVAX** utilized for floor sweeps.
+- **✅ Supply Deflated:** **9 NFTs** permanently removed from circulation.
+- **✅ Multi-Market Execution:** Sweeps executed across both **Joepegs** and **Salvor** to maintain floor health.
+
 ---
 
 ## The Protocol
