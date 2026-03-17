@@ -10,7 +10,7 @@ Lil Burn is a tactical NFT protocol where survival is the only goal. By deployin
 
 - **✅ Mint Completed:** 3-phase launch successfully concluded (March 4–5, 2026). Public phase sold out in **13 minutes**.
 - **✅ Capital Deployed:** **1,800 $AVAX** (90% of total proceeds) converted to **$PHAR/$xPHAR** and staked in Pharaoh autovaults.
-- **✅ Yield Active:** Initial **15.27 $AVAX** yield already harvested, 80% secured in the Buy-backs Wallet for the March 12th Purge.
+- **✅ Yield Active:** Initial **38.39 $AVAX** yield already harvested, 80% secured in the Buy-backs Wallet for the March 12th Purge.
 - **✅ Security:** **SHA-256 Hashed Manifest** shared publicly for pre-determined game fairness.
 
 ## Live Statistics (The Purge: Week 1)
