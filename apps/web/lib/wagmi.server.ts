@@ -1,8 +1,9 @@
 import "server-only";
+
 import { createPublicClient, http } from "viem";
 import { avalanche, avalancheFuji, hardhat } from "viem/chains";
 
-function createClient() {
+export const publicClient = (() => {
   switch (process.env.NEXT_PUBLIC_CHAIN) {
     case "localhost":
       return createPublicClient({
@@ -19,6 +20,4 @@ function createClient() {
     default:
       throw new Error("NEXT_PUBLIC_CHAIN not set");
   }
-}
-
-export const publicClient = createClient();
+})();

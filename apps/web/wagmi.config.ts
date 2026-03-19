@@ -22,8 +22,8 @@ export default defineConfig({
               [avalanche.id]: "0xF3513f263994A3536cc0A684209013d6808fE443",
             },
             WarChest: {
-              [hardhatChain.id]: "0x0165878a594ca255338adfa4d48449f69242eb8f",
-              [avalancheFuji.id]: "0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7",
+              [hardhatChain.id]: "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0",
+              [avalancheFuji.id]: "0x686F9aA85863D9153ccFc70D860F033a0a486ae3",
               [avalanche.id]: zeroAddress,
             },
           },
@@ -37,7 +37,7 @@ export default defineConfig({
                   abi: contract.abi.filter((item) => {
                     switch (item.type) {
                       case "event":
-                        return false;
+                        return ["Transfer"].includes(item.name);
 
                       case "error":
                         return false;
@@ -62,6 +62,8 @@ export default defineConfig({
                           "balanceOf",
                           "MAX_PUBLIC_MINT",
                           "nextTokenId",
+                          "tokensOfOwner",
+                          "burn",
                         ].includes(item.name);
                     }
                   }),
@@ -83,10 +85,8 @@ export default defineConfig({
                         return [
                           "MIN_DONATION",
                           "donate",
-                          "totalDonated",
-                          "totalDonors",
-                          "totalDonations",
                           "currentEpoch",
+                          "nextEpochStart",
                         ].includes(item.name);
                     }
                   }),

@@ -2,22 +2,12 @@
 pragma solidity ^0.8.28;
 
 import {Ownable2Step, Ownable} from "@openzeppelin/contracts/access/Ownable2Step.sol";
+import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
 
-contract WarChest is Ownable2Step {
+contract WarChest is Ownable2Step, Pausable {
     uint256 public constant MIN_DONATION = 0.1 ether;
     uint256 public constant EPOCH_DURATION = 90 days;
     uint256 public immutable startTimestamp;
-
-    mapping(uint256 => mapping(address => uint256)) public donations;
-    mapping(uint256 => uint256) public epochTotals;
-    mapping(uint256 => uint256) public epochDonorCount;
-    mapping(uint256 => uint256) public epochDonationCount;
-    mapping(uint256 => mapping(address => bool)) private _hasDonatedInEpoch;
-
-    uint256 public totalDonated;
-    uint256 public totalDonors;
-    uint256 public totalDonations;
-    mapping(address => bool) private _hasDonated;
 
     error InsufficientDonation();
     error WithdrawFailed();
@@ -31,7 +21,11 @@ contract WarChest is Ownable2Step {
     }
 
     function currentEpoch() public view returns (uint256) {
-        return (block.timestamp - startTimestamp) / EPOCH_DURATION;
+        return (block.timestamp - startTimestamp) / EPOCH_DURATION + 1;
+    }
+
+    function nextEpochStart() public view returns (uint256) {
+        return startTimestamp + currentEpoch() * EPOCH_DURATION;
     }
 
     receive() external payable {
@@ -42,43 +36,29 @@ contract WarChest is Ownable2Step {
         _donate(msg.sender, msg.value);
     }
 
-    function _donate(address donor, uint256 amount) internal {
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    function unpause() external onlyOwner {
+        _unpause();
+    }
+
+    function _donate(address donor, uint256 amount) internal whenNotPaused {
         if (amount < MIN_DONATION) revert InsufficientDonation();
 
-        uint256 epoch = currentEpoch();
-
-        donations[epoch][donor] += amount;
-
-        epochTotals[epoch] += amount;
-        epochDonationCount[epoch] += 1;
-
-        if (!_hasDonatedInEpoch[epoch][donor]) {
-            _hasDonatedInEpoch[epoch][donor] = true;
-            epochDonorCount[epoch] += 1;
-        }
-
-        totalDonated += amount;
-        totalDonations += 1;
-
-        if (!_hasDonated[donor]) {
-            _hasDonated[donor] = true;
-            totalDonors += 1;
-        }
-
-        emit Donated(donor, epoch, amount);
+        emit Donated(donor, currentEpoch(), amount);
     }
 
     function withdraw() external onlyOwner {
-        address recipient = owner();
-
         uint256 balance = address(this).balance;
 
         if (balance == 0) revert NothingToWithdraw();
 
-        (bool success, ) = payable(recipient).call{value: balance}("");
+        (bool success, ) = payable(msg.sender).call{value: balance}("");
 
         if (!success) revert WithdrawFailed();
 
-        emit Withdrawn(recipient, balance);
+        emit Withdrawn(msg.sender, balance);
     }
 }

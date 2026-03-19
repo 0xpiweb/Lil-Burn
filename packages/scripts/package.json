@@ -9,7 +9,8 @@
     "generate-whitelist-merkle-tree": "tsx src/generate-whitelist-merkle-tree.ts",
     "generate-metadata": "tsx src/generate-metadata.ts",
     "verify-metadata": "tsx src/verify-metadata.ts",
-    "verify-snapshot": "tsx src/verify-snapshot.ts"
+    "verify-snapshot": "tsx src/verify-snapshot.ts",
+    "find-block-number": "tsx src/find-block-number.ts"
   },
   "dependencies": {
     "@lilburn/contracts": "*",

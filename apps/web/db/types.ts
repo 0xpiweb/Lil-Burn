@@ -1,5 +1,5 @@
 import { customType } from "drizzle-orm/sqlite-core";
-import { Address, getAddress, Hex, isAddress, isHex } from "viem";
+import { type Address, getAddress, type Hex, isAddress, isHex } from "viem";
 
 export const address = customType<{ data: Address; driverData: string }>({
   dataType() {

@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/*": ["./db/migrations/**"],
   },
+  images: {
+    remotePatterns: [new URL("https://lilburn.xyz/images/**")],
+  },
 };
 
 export default nextConfig;

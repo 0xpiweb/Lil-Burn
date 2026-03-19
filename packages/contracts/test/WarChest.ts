@@ -15,6 +15,7 @@ describe("WarChest", async () => {
     InsufficientDonation = "InsufficientDonation",
     WithdrawFailed = "WithdrawFailed",
     NothingToWithdraw = "NothingToWithdraw",
+    EnforcedPause = "EnforcedPause",
   }
 
   async function deployFixture() {
@@ -52,20 +53,41 @@ describe("WarChest", async () => {
       assert.ok(startTimestamp > 0n);
     });
 
-    it("Initial currentEpoch is 0", async () => {
+    it("Initial currentEpoch is 1", async () => {
       const { warChest } = await networkHelpers.loadFixture(deployFixture);
 
       const currentEpoch = await warChest.read.currentEpoch();
 
-      assert.equal(currentEpoch, 0n);
+      assert.equal(currentEpoch, 1n);
     });
 
-    it("Initial totalDonated is 0", async () => {
+    it("nextEpochStart is startTimestamp + EPOCH_DURATION", async () => {
       const { warChest } = await networkHelpers.loadFixture(deployFixture);
 
-      const total = await warChest.read.totalDonated();
+      const [startTimestamp, epochDuration, nextEpochStart] = await Promise.all(
+        [
+          warChest.read.startTimestamp(),
+          warChest.read.EPOCH_DURATION(),
+          warChest.read.nextEpochStart(),
+        ],
+      );
 
-      assert.equal(total, 0n);
+      assert.equal(nextEpochStart, startTimestamp + epochDuration);
+    });
+
+    it("nextEpochStart advances by EPOCH_DURATION each epoch", async () => {
+      const { warChest } = await networkHelpers.loadFixture(deployFixture);
+
+      const [epochDuration, first] = await Promise.all([
+        warChest.read.EPOCH_DURATION(),
+        warChest.read.nextEpochStart(),
+      ]);
+
+      await networkHelpers.time.increase(networkHelpers.time.duration.days(90));
+
+      const second = await warChest.read.nextEpochStart();
+
+      assert.equal(second, first + epochDuration);
     });
 
     it("Owner is set correctly", async () => {
@@ -88,9 +110,11 @@ describe("WarChest", async () => {
         value: parseEther("1"),
       });
 
-      const total = await warChest.read.totalDonated();
+      const balance = await publicClient.getBalance({
+        address: warChest.address,
+      });
 
-      assert.equal(total, parseEther("1"));
+      assert.equal(balance, parseEther("1"));
     });
 
     it("Anyone can transfer", async () => {
@@ -102,68 +126,14 @@ describe("WarChest", async () => {
         value: parseEther("1"),
       });
 
-      const total = await warChest.read.totalDonated();
-
-      assert.equal(total, parseEther("1"));
-    });
-
-    it("Donations update epochTotals", async () => {
-      const { warChest, donor1 } =
-        await networkHelpers.loadFixture(deployFixture);
-
-      await warChest.write.donate({
-        account: donor1.account,
-        value: parseEther("1"),
+      const balance = await publicClient.getBalance({
+        address: warChest.address,
       });
 
-      const epochTotal = await warChest.read.epochTotals([0n]);
-
-      assert.equal(epochTotal, parseEther("1"));
+      assert.equal(balance, parseEther("1"));
     });
 
-    it("Transfers update epochTotals", async () => {
-      const { warChest, donor1 } =
-        await networkHelpers.loadFixture(deployFixture);
-
-      await donor1.sendTransaction({
-        to: warChest.address,
-        value: parseEther("1"),
-      });
-
-      const epochTotal = await warChest.read.epochTotals([0n]);
-
-      assert.equal(epochTotal, parseEther("1"));
-    });
-
-    it("Donations update totalDonated", async () => {
-      const { warChest, donor1 } =
-        await networkHelpers.loadFixture(deployFixture);
-
-      await warChest.write.donate({
-        account: donor1.account,
-        value: parseEther("1"),
-      });
-
-      const total = await warChest.read.totalDonated();
-
-      assert.equal(total, parseEther("1"));
-    });
-
-    it("Transfers update totalDonated", async () => {
-      const { warChest, donor1 } =
-        await networkHelpers.loadFixture(deployFixture);
-
-      await donor1.sendTransaction({
-        to: warChest.address,
-        value: parseEther("1"),
-      });
-
-      const total = await warChest.read.totalDonated();
-
-      assert.equal(total, parseEther("1"));
-    });
-
-    it("Multiple donations from the same address accumulate", async () => {
+    it("Multiple donations from the same address accumulate in balance", async () => {
       const { warChest, donor1 } =
         await networkHelpers.loadFixture(deployFixture);
 
@@ -177,16 +147,14 @@ describe("WarChest", async () => {
         value: parseEther("2"),
       });
 
-      const [donor1EpochTotal, total] = await Promise.all([
-        warChest.read.donations([0n, donor1.account.address]),
-        warChest.read.totalDonated(),
-      ]);
+      const balance = await publicClient.getBalance({
+        address: warChest.address,
+      });
 
-      assert.equal(donor1EpochTotal, parseEther("3"));
-      assert.equal(total, parseEther("3"));
+      assert.equal(balance, parseEther("3"));
     });
 
-    it("Multiple transfers from the same address accumulate", async () => {
+    it("Multiple transfers from the same address accumulate in balance", async () => {
       const { warChest, donor1 } =
         await networkHelpers.loadFixture(deployFixture);
 
@@ -200,16 +168,14 @@ describe("WarChest", async () => {
         value: parseEther("2"),
       });
 
-      const [donor1EpochTotal, total] = await Promise.all([
-        warChest.read.donations([0n, donor1.account.address]),
-        warChest.read.totalDonated(),
-      ]);
+      const balance = await publicClient.getBalance({
+        address: warChest.address,
+      });
 
-      assert.equal(donor1EpochTotal, parseEther("3"));
-      assert.equal(total, parseEther("3"));
+      assert.equal(balance, parseEther("3"));
     });
 
-    it("Multiple donors can donate in the same epoch", async () => {
+    it("Multiple donors accumulate in balance", async () => {
       const { warChest, donor1, donor2, donor3 } =
         await networkHelpers.loadFixture(deployFixture);
 
@@ -228,65 +194,11 @@ describe("WarChest", async () => {
         value: parseEther("3"),
       });
 
-      const [
-        donor1EpochTotal,
-        donor2EpochTotal,
-        donor3EpochTotal,
-        epochTotal,
-        total,
-      ] = await Promise.all([
-        warChest.read.donations([0n, donor1.account.address]),
-        warChest.read.donations([0n, donor2.account.address]),
-        warChest.read.donations([0n, donor3.account.address]),
-        warChest.read.epochTotals([0n]),
-        warChest.read.totalDonated(),
-      ]);
-
-      assert.equal(donor1EpochTotal, parseEther("1"));
-      assert.equal(donor2EpochTotal, parseEther("2"));
-      assert.equal(donor3EpochTotal, parseEther("3"));
-      assert.equal(epochTotal, parseEther("6"));
-      assert.equal(total, parseEther("6"));
-    });
-
-    it("Multiple donors can transfer in the same epoch", async () => {
-      const { warChest, donor1, donor2, donor3 } =
-        await networkHelpers.loadFixture(deployFixture);
-
-      await donor1.sendTransaction({
-        to: warChest.address,
-        value: parseEther("1"),
+      const balance = await publicClient.getBalance({
+        address: warChest.address,
       });
 
-      await donor2.sendTransaction({
-        to: warChest.address,
-        value: parseEther("2"),
-      });
-
-      await donor3.sendTransaction({
-        to: warChest.address,
-        value: parseEther("3"),
-      });
-
-      const [
-        donor1EpochTotal,
-        donor2EpochTotal,
-        donor3EpochTotal,
-        epochTotal,
-        total,
-      ] = await Promise.all([
-        warChest.read.donations([0n, donor1.account.address]),
-        warChest.read.donations([0n, donor2.account.address]),
-        warChest.read.donations([0n, donor3.account.address]),
-        warChest.read.epochTotals([0n]),
-        warChest.read.totalDonated(),
-      ]);
-
-      assert.equal(donor1EpochTotal, parseEther("1"));
-      assert.equal(donor2EpochTotal, parseEther("2"));
-      assert.equal(donor3EpochTotal, parseEther("3"));
-      assert.equal(epochTotal, parseEther("6"));
-      assert.equal(total, parseEther("6"));
+      assert.equal(balance, parseEther("6"));
     });
 
     it("Emits Donated event with correct args when donating", async () => {
@@ -308,11 +220,11 @@ describe("WarChest", async () => {
 
       assert.equal(events.length, 1);
       assert.equal(donor, getAddress(donor1.account.address));
-      assert.equal(epoch, 0n);
+      assert.equal(epoch, 1n);
       assert.equal(amount, parseEther("1"));
     });
 
-    it("Emits Donated event with correct args when transfering", async () => {
+    it("Emits Donated event with correct args when transferring", async () => {
       const { warChest, donor1 } =
         await networkHelpers.loadFixture(deployFixture);
 
@@ -331,45 +243,12 @@ describe("WarChest", async () => {
 
       assert.equal(events.length, 1);
       assert.equal(donor, getAddress(donor1.account.address));
-      assert.equal(epoch, 0n);
+      assert.equal(epoch, 1n);
       assert.equal(amount, parseEther("1"));
     });
 
-    it("Contract balance increases with donations", async () => {
-      const { warChest, donor1 } =
-        await networkHelpers.loadFixture(deployFixture);
-
-      await warChest.write.donate({
-        account: donor1.account,
-        value: parseEther("5"),
-      });
-
-      const balance = await publicClient.getBalance({
-        address: warChest.address,
-      });
-
-      assert.equal(balance, parseEther("5"));
-    });
-
-    it("Contract balance increases with transfers", async () => {
-      const { warChest, donor1 } =
-        await networkHelpers.loadFixture(deployFixture);
-
-      await donor1.sendTransaction({
-        to: warChest.address,
-        value: parseEther("5"),
-      });
-
-      const balance = await publicClient.getBalance({
-        address: warChest.address,
-      });
-
-      assert.equal(balance, parseEther("5"));
-    });
-
     it("Revert when donation is below MIN_DONATION", async () => {
-      const { warChest, donor1 } =
-        await networkHelpers.loadFixture(deployFixture);
+      const { warChest } = await networkHelpers.loadFixture(deployFixture);
 
       await viem.assertions.revertWithCustomError(
         warChest.write.donate({
@@ -425,44 +304,6 @@ describe("WarChest", async () => {
   });
 
   describe("Multi-epoch donations", async () => {
-    it("Donations in different epochs are tracked separately", async () => {
-      const { warChest, donor1 } =
-        await networkHelpers.loadFixture(deployFixture);
-
-      await warChest.write.donate({
-        account: donor1.account,
-        value: parseEther("1"),
-      });
-
-      await networkHelpers.time.increase(networkHelpers.time.duration.days(90));
-
-      await warChest.write.donate({
-        account: donor1.account,
-        value: parseEther("2"),
-      });
-
-      const [
-        donor1Epoch0Total,
-        donor1Epoch1Total,
-        epoch0Total,
-        epoch1Total,
-        total,
-      ] = await Promise.all([
-        warChest.read.donations([0n, donor1.account.address]),
-        warChest.read.donations([1n, donor1.account.address]),
-        warChest.read.epochTotals([0n]),
-        warChest.read.epochTotals([1n]),
-        warChest.read.totalDonated(),
-        parseEther("3"),
-      ]);
-
-      assert.equal(donor1Epoch0Total, parseEther("1"));
-      assert.equal(donor1Epoch1Total, parseEther("2"));
-      assert.equal(epoch0Total, parseEther("1"));
-      assert.equal(epoch1Total, parseEther("2"));
-      assert.equal(total, parseEther("3"));
-    });
-
     it("Donated event includes correct epoch after time passes", async () => {
       const { warChest, donor1 } =
         await networkHelpers.loadFixture(deployFixture);
@@ -485,10 +326,10 @@ describe("WarChest", async () => {
       } = events[0];
 
       assert.equal(events.length, 1);
-      assert.equal(epoch, 2n);
+      assert.equal(epoch, 3n);
     });
 
-    it("Multiple donors across multiple epochs", async () => {
+    it("Donations across epochs accumulate in balance", async () => {
       const { warChest, donor1, donor2 } =
         await networkHelpers.loadFixture(deployFixture);
 
@@ -516,37 +357,11 @@ describe("WarChest", async () => {
         value: parseEther("4"),
       });
 
-      const [
-        donor1Epoch0Total,
-        donor2Epoch0Total,
-        donor2Epoch1Total,
-        donor1Epoch2Total,
-        donor2Epoch2Total,
-        epoch0Total,
-        epoch1Total,
-        epoch2Total,
-        total,
-      ] = await Promise.all([
-        warChest.read.donations([0n, donor1.account.address]),
-        warChest.read.donations([0n, donor2.account.address]),
-        warChest.read.donations([1n, donor2.account.address]),
-        warChest.read.donations([2n, donor1.account.address]),
-        warChest.read.donations([2n, donor2.account.address]),
-        warChest.read.epochTotals([0n]),
-        warChest.read.epochTotals([1n]),
-        warChest.read.epochTotals([2n]),
-        warChest.read.totalDonated(),
-      ]);
+      const balance = await publicClient.getBalance({
+        address: warChest.address,
+      });
 
-      assert.equal(donor1Epoch0Total, parseEther("1"));
-      assert.equal(donor2Epoch0Total, 0n);
-      assert.equal(donor2Epoch1Total, parseEther("5"));
-      assert.equal(donor1Epoch2Total, parseEther("3"));
-      assert.equal(donor2Epoch2Total, parseEther("4"));
-      assert.equal(epoch0Total, parseEther("1"));
-      assert.equal(epoch1Total, parseEther("5"));
-      assert.equal(epoch2Total, parseEther("7"));
-      assert.equal(total, parseEther("13"));
+      assert.equal(balance, parseEther("13"));
     });
   });
 
@@ -625,48 +440,6 @@ describe("WarChest", async () => {
       assert.equal(amount, parseEther("5"));
     });
 
-    it("totalDonated is not affected by withdrawal", async () => {
-      const { warChest, donor1 } =
-        await networkHelpers.loadFixture(deployFixture);
-
-      await warChest.write.donate({
-        account: donor1.account,
-        value: parseEther("10"),
-      });
-
-      await warChest.write.withdraw();
-
-      const [total, balance] = await Promise.all([
-        warChest.read.totalDonated(),
-        publicClient.getBalance({
-          address: warChest.address,
-        }),
-      ]);
-
-      assert.equal(total, parseEther("10"));
-      assert.equal(balance, 0n);
-    });
-
-    it("Per-epoch donation data persists after withdrawal", async () => {
-      const { warChest, donor1 } =
-        await networkHelpers.loadFixture(deployFixture);
-
-      await warChest.write.donate({
-        account: donor1.account,
-        value: parseEther("10"),
-      });
-
-      await warChest.write.withdraw();
-
-      const [donor1Epoch0Total, epoch0Total] = await Promise.all([
-        warChest.read.donations([0n, donor1.account.address]),
-        warChest.read.epochTotals([0n]),
-      ]);
-
-      assert.equal(donor1Epoch0Total, parseEther("10"));
-      assert.equal(epoch0Total, parseEther("10"));
-    });
-
     it("Can donate again after withdrawal", async () => {
       const { warChest, donor1 } =
         await networkHelpers.loadFixture(deployFixture);
@@ -683,19 +456,11 @@ describe("WarChest", async () => {
         value: parseEther("3"),
       });
 
-      const [donor1EpochTotal, total] = await Promise.all([
-        warChest.read.donations([0n, donor1.account.address]),
-        warChest.read.totalDonated(),
-      ]);
-
-      assert.equal(donor1EpochTotal, parseEther("8"));
-      assert.equal(total, parseEther("8"));
-
-      const contractBalance = await publicClient.getBalance({
+      const balance = await publicClient.getBalance({
         address: warChest.address,
       });
 
-      assert.equal(contractBalance, parseEther("3"));
+      assert.equal(balance, parseEther("3"));
     });
 
     it("Revert when withdrawing with zero balance", async () => {
@@ -709,149 +474,115 @@ describe("WarChest", async () => {
     });
   });
 
-  describe("Donor and donation counts", async () => {
-    it("Initial counts are 0", async () => {
+  describe("Pause", async () => {
+    it("paused() is false initially", async () => {
       const { warChest } = await networkHelpers.loadFixture(deployFixture);
 
-      const [donors, donations, epochDonors, epochDonations] =
-        await Promise.all([
-          warChest.read.totalDonors(),
-          warChest.read.totalDonations(),
-          warChest.read.epochDonorCount([0n]),
-          warChest.read.epochDonationCount([0n]),
-        ]);
+      const paused = await warChest.read.paused();
 
-      assert.equal(donors, 0n);
-      assert.equal(donations, 0n);
-      assert.equal(epochDonors, 0n);
-      assert.equal(epochDonations, 0n);
+      assert.equal(paused, false);
     });
 
-    it("Single donor increments all counts by 1", async () => {
+    it("Owner can pause", async () => {
+      const { warChest, owner } =
+        await networkHelpers.loadFixture(deployFixture);
+
+      await warChest.write.pause({ account: owner.account });
+
+      const paused = await warChest.read.paused();
+
+      assert.equal(paused, true);
+    });
+
+    it("Non-owner cannot pause", async () => {
       const { warChest, donor1 } =
         await networkHelpers.loadFixture(deployFixture);
 
-      await warChest.write.donate({
-        account: donor1.account,
-        value: parseEther("1"),
-      });
-
-      const [donors, donations, epochDonors, epochDonations] =
-        await Promise.all([
-          warChest.read.totalDonors(),
-          warChest.read.totalDonations(),
-          warChest.read.epochDonorCount([0n]),
-          warChest.read.epochDonationCount([0n]),
-        ]);
-
-      assert.equal(donors, 1n);
-      assert.equal(donations, 1n);
-      assert.equal(epochDonors, 1n);
-      assert.equal(epochDonations, 1n);
+      await viem.assertions.revertWithCustomError(
+        warChest.write.pause({ account: donor1.account }),
+        warChest,
+        Error.OwnableUnauthorizedAccount,
+      );
     });
 
-    it("Same donor donating twice counts as 1 donor but 2 donations", async () => {
-      const { warChest, donor1 } =
+    it("donate() reverts when paused", async () => {
+      const { warChest, owner, donor1 } =
         await networkHelpers.loadFixture(deployFixture);
 
-      await warChest.write.donate({
-        account: donor1.account,
-        value: parseEther("1"),
-      });
-      await warChest.write.donate({
-        account: donor1.account,
-        value: parseEther("1"),
-      });
+      await warChest.write.pause({ account: owner.account });
 
-      const [donors, donations, epochDonors, epochDonations] =
-        await Promise.all([
-          warChest.read.totalDonors(),
-          warChest.read.totalDonations(),
-          warChest.read.epochDonorCount([0n]),
-          warChest.read.epochDonationCount([0n]),
-        ]);
-
-      assert.equal(donors, 1n);
-      assert.equal(donations, 2n);
-      assert.equal(epochDonors, 1n);
-      assert.equal(epochDonations, 2n);
+      await viem.assertions.revertWithCustomError(
+        warChest.write.donate({
+          account: donor1.account,
+          value: parseEther("1"),
+        }),
+        warChest,
+        Error.EnforcedPause,
+      );
     });
 
-    it("Three different donors each count once", async () => {
-      const { warChest, donor1, donor2, donor3 } =
+    it("Direct ETH transfer reverts when paused", async () => {
+      const { warChest, owner, donor1 } =
         await networkHelpers.loadFixture(deployFixture);
 
-      await warChest.write.donate({
-        account: donor1.account,
-        value: parseEther("1"),
-      });
+      await warChest.write.pause({ account: owner.account });
 
-      await warChest.write.donate({
-        account: donor2.account,
-        value: parseEther("1"),
-      });
-
-      await warChest.write.donate({
-        account: donor3.account,
-        value: parseEther("1"),
-      });
-
-      const [donors, donations, epochDonors, epochDonations] =
-        await Promise.all([
-          warChest.read.totalDonors(),
-          warChest.read.totalDonations(),
-          warChest.read.epochDonorCount([0n]),
-          warChest.read.epochDonationCount([0n]),
-        ]);
-
-      assert.equal(donors, 3n);
-      assert.equal(donations, 3n);
-      assert.equal(epochDonors, 3n);
-      assert.equal(epochDonations, 3n);
+      await viem.assertions.revertWithCustomError(
+        donor1.sendTransaction({
+          to: warChest.address,
+          value: parseEther("1"),
+        }),
+        warChest,
+        Error.EnforcedPause,
+      );
     });
 
-    it("Donor returning in a new epoch counts again for epoch but not global", async () => {
-      const { warChest, donor1 } =
+    it("Owner can unpause", async () => {
+      const { warChest, owner } =
         await networkHelpers.loadFixture(deployFixture);
 
-      await warChest.write.donate({
-        account: donor1.account,
-        value: parseEther("1"),
-      });
+      await warChest.write.pause({ account: owner.account });
+      await warChest.write.unpause({ account: owner.account });
 
-      await networkHelpers.time.increase(networkHelpers.time.duration.days(90));
+      const paused = await warChest.read.paused();
 
-      await warChest.write.donate({
-        account: donor1.account,
-        value: parseEther("1"),
-      });
-
-      const [
-        totalDonors,
-        totalDonations,
-        epoch0Donors,
-        epoch1Donors,
-        epoch0Donations,
-        epoch1Donations,
-      ] = await Promise.all([
-        warChest.read.totalDonors(),
-        warChest.read.totalDonations(),
-        warChest.read.epochDonorCount([0n]),
-        warChest.read.epochDonorCount([1n]),
-        warChest.read.epochDonationCount([0n]),
-        warChest.read.epochDonationCount([1n]),
-      ]);
-
-      assert.equal(totalDonors, 1n);
-      assert.equal(totalDonations, 2n);
-      assert.equal(epoch0Donors, 1n);
-      assert.equal(epoch1Donors, 1n);
-      assert.equal(epoch0Donations, 1n);
-      assert.equal(epoch1Donations, 1n);
+      assert.equal(paused, false);
     });
 
-    it("New donor in epoch 1 increments global donor count", async () => {
-      const { warChest, donor1, donor2 } =
+    it("Non-owner cannot unpause", async () => {
+      const { warChest, owner, donor1 } =
+        await networkHelpers.loadFixture(deployFixture);
+
+      await warChest.write.pause({ account: owner.account });
+
+      await viem.assertions.revertWithCustomError(
+        warChest.write.unpause({ account: donor1.account }),
+        warChest,
+        Error.OwnableUnauthorizedAccount,
+      );
+    });
+
+    it("Donations work again after unpause", async () => {
+      const { warChest, owner, donor1 } =
+        await networkHelpers.loadFixture(deployFixture);
+
+      await warChest.write.pause({ account: owner.account });
+      await warChest.write.unpause({ account: owner.account });
+
+      await warChest.write.donate({
+        account: donor1.account,
+        value: parseEther("1"),
+      });
+
+      const balance = await publicClient.getBalance({
+        address: warChest.address,
+      });
+
+      assert.equal(balance, parseEther("1"));
+    });
+
+    it("withdraw() succeeds even while paused", async () => {
+      const { warChest, owner, donor1 } =
         await networkHelpers.loadFixture(deployFixture);
 
       await warChest.write.donate({
@@ -859,25 +590,15 @@ describe("WarChest", async () => {
         value: parseEther("1"),
       });
 
-      await networkHelpers.time.increase(networkHelpers.time.duration.days(90));
+      await warChest.write.pause({ account: owner.account });
 
-      await warChest.write.donate({
-        account: donor2.account,
-        value: parseEther("1"),
+      await warChest.write.withdraw({ account: owner.account });
+
+      const balance = await publicClient.getBalance({
+        address: warChest.address,
       });
 
-      const [totalDonors, totalDonations, epoch0Donors, epoch1Donors] =
-        await Promise.all([
-          warChest.read.totalDonors(),
-          warChest.read.totalDonations(),
-          warChest.read.epochDonorCount([0n]),
-          warChest.read.epochDonorCount([1n]),
-        ]);
-
-      assert.equal(totalDonors, 2n);
-      assert.equal(totalDonations, 2n);
-      assert.equal(epoch0Donors, 1n);
-      assert.equal(epoch1Donors, 1n);
+      assert.equal(balance, 0n);
     });
   });
 });

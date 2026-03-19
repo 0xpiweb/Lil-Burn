@@ -1,7 +1,7 @@
 {
   "name": "Lil-B #1000",
   "description": "LilBurn NFT",
-  "image": "https://lilburn.xyz/images/Lil-B%20-%20Lightning%20Master.png",
+  "image": "https://lilburn.xyz/images/Lil-B%20-%20LHB.png",
   "attributes": [
     {
       "trait_type": "Artist",
@@ -9,11 +9,11 @@
     },
     {
       "trait_type": "F1R3 Crew",
-      "value": "Lightning Master"
+      "value": "LHB"
     },
     {
       "trait_type": "Sweep Score",
-      "value": 9
+      "value": 0
     },
     {
       "trait_type": "Cursed",

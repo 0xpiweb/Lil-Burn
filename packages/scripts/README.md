@@ -88,3 +88,14 @@ npm run verify-metadata <cursed_assignment>
 ```
 
 - `addresses` Cursed assignment json file path
+
+## `find-block-number`
+
+Find the closest block to a give date
+
+```sh
+npm run find-block-number <date> [rounding]
+```
+
+- `date` ISO 8601 Date
+- `rounding` `floor` (last block before the timestamp), `ceil` (first block at or after the timestamp) or `round` (closest block) (optional, defaults to `round`)

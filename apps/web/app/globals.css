@@ -19,6 +19,11 @@ body {
   font-family: var(--font-geist-mono), monospace;
 }
 
+::selection {
+  background-color: rgba(185, 28, 28, 0.4);
+  color: #fff;
+}
+
 body::before {
   content: "";
   position: fixed;

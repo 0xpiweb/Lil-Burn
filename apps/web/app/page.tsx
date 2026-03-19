@@ -1,12 +1,12 @@
-import { GradientText } from "@/components/GradientText";
-import { GrungeCard } from "@/components/GrungeCard";
-import { GrungeLink } from "@/components/GrungeLink";
-import { Page } from "@/components/Page";
+import { LayoutPage } from "@/components/layout/LayoutPage";
+import { GradientText } from "@/components/ui/GradientText";
+import { GrungeCard } from "@/components/ui/GrungeCard";
+import { GrungeLink } from "@/components/ui/GrungeLink";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <Page className="flex-row items-center gap-8 lg:flex-row">
+    <LayoutPage className="flex-row items-center gap-8 lg:flex-row">
       <div className="flex w-full flex-1 flex-col gap-8">
         <div>
           <h1 className="font-display text-7xl leading-none font-black tracking-wide text-white uppercase">
@@ -45,7 +45,7 @@ export default function Home() {
       </div>
 
       <div className="hidden flex-1 md:block">
-        <GrungeCard className="relative aspect-square overflow-hidden rounded-sm border-2 glow-border-red border-red-800/60">
+        <GrungeCard className="relative aspect-square overflow-hidden rounded-sm border-2 glow-border-red border-red-800">
           <Image
             src="/cover.png"
             alt="Lil-Burn NFT"
@@ -54,6 +54,6 @@ export default function Home() {
           />
         </GrungeCard>
       </div>
-    </Page>
+    </LayoutPage>
   );
 }

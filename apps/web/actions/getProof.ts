@@ -5,7 +5,7 @@ import { type SerializedHolderLeaf, type WhitelistLeaf } from "@lilburn/types";
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { Hex, isAddress, isAddressEqual } from "viem";
+import { type Hex, isAddress, isAddressEqual } from "viem";
 
 export async function getProof(address: string): Promise<Proof> {
   if (!isAddress(address)) {

@@ -6,15 +6,117 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { Address, parseEther } from "viem";
+import { Address, Hex, PublicClient, parseEther } from "viem";
 
 const NETWORK_NAME = "simulated";
 const METADATA_PORT = 3002;
 const WEBDATA_DIR = "../../../apps/web/data";
 const RPC_DELAY_MS = 100;
 const MINING_INTERVAL = 1000;
-const DONATIONS_WEBHOOK_URL = "http://localhost:3000/api/webhooks/donations";
+const DONATIONS_WEBHOOK_URL = "http://localhost:3000/api/webhooks/alchemy";
 const DONATIONS_SIGNING_KEY = "signing-key";
+
+function watchAlchemyWebhook(
+  publicClient: PublicClient,
+  addresses: Address[],
+  webhookUrl: string,
+  signingKey: string,
+) {
+  return publicClient.watchEvent({
+    address: addresses,
+    onLogs: async (logs) => {
+      const byBlock = new Map<bigint, typeof logs>();
+
+      for (const log of logs) {
+        const key = log.blockNumber!;
+
+        if (!byBlock.has(key)) {
+          byBlock.set(key, []);
+        }
+
+        byBlock.get(key)!.push(log);
+      }
+
+      for (const [blockNumber, blockLogs] of byBlock) {
+        const txHashes = [...new Set(blockLogs.map((l) => l.transactionHash!))];
+
+        const block = await publicClient.getBlock({ blockNumber });
+
+        const txData = await Promise.all(
+          txHashes.map((hash) =>
+            Promise.all([
+              publicClient.getTransaction({ hash }),
+              publicClient.getTransactionReceipt({ hash }),
+            ]),
+          ),
+        );
+
+        const txByHash = new Map(txHashes.map((hash, i) => [hash, txData[i]]));
+
+        const payload: AlchemyWebhookPayload = {
+          webhookId: "wh_local",
+          id: `whevt_${block.hash}`,
+          createdAt: new Date().toISOString(),
+          type: "GRAPHQL",
+          event: {
+            sequenceNumber: "0",
+            network: "LOCALHOST",
+            data: {
+              block: {
+                hash: block.hash!,
+                number: Number(block.number),
+                timestamp: Number(block.timestamp),
+                logs: blockLogs.map((log) => {
+                  const [tx, receipt] = txByHash.get(log.transactionHash!)!;
+                  return {
+                    data: log.data,
+                    topics: log.topics as [Hex, ...Hex[]],
+                    index: log.logIndex!,
+                    account: { address: log.address },
+                    transaction: {
+                      hash: log.transactionHash!,
+                      nonce: tx.nonce,
+                      index: receipt.transactionIndex,
+                      from: { address: tx.from },
+                      to: { address: tx.to! },
+                      value: `0x${tx.value.toString(16)}`,
+                      gasPrice: `0x${(tx.gasPrice ?? 0n).toString(16)}`,
+                      maxFeePerGas: `0x${(tx.maxFeePerGas ?? tx.gasPrice ?? 0n).toString(16)}`,
+                      maxPriorityFeePerGas: `0x${(tx.maxPriorityFeePerGas ?? 0n).toString(16)}`,
+                      gas: Number(tx.gas),
+                      status: receipt.status === "success" ? 1 : 0,
+                      gasUsed: Number(receipt.gasUsed),
+                      cumulativeGasUsed: Number(receipt.cumulativeGasUsed),
+                      effectiveGasPrice: `0x${receipt.effectiveGasPrice.toString(16)}`,
+                      createdContract: receipt.contractAddress ?? null,
+                    },
+                  };
+                }),
+              },
+            },
+          },
+        };
+
+        const body = JSON.stringify(payload);
+
+        const signature = createHmac("sha256", signingKey)
+          .update(body)
+          .digest("hex");
+
+        await fetch(webhookUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-alchemy-signature": signature,
+          },
+          body,
+        }).catch((err) =>
+          console.warn(`Webhook forward failed: ${err.message}`, err.cause),
+        );
+      }
+    },
+  });
+}
 
 function createJsonRpcServer(
   provider: {
@@ -91,6 +193,160 @@ function createJsonRpcServer(
   );
 }
 
+function writeTree(tree: StandardMerkleTree<any>, dir: string, name: string) {
+  return writeFile(
+    join(dir, name),
+    JSON.stringify(tree.dump(), (_, value: unknown) =>
+      typeof value === "bigint" ? value.toString() : value,
+    ),
+  );
+}
+
+async function setupWallets(
+  networkHelpers: Awaited<ReturnType<typeof network.connect>>["networkHelpers"],
+  allWallets: Awaited<
+    ReturnType<
+      Awaited<ReturnType<typeof network.connect>>["viem"]["getWalletClients"]
+    >
+  >,
+) {
+  const wallets = allWallets.slice(0, 7);
+
+  const [owner, holder, holderWhitelisted, whitelisted, , multisig, sweeper] =
+    wallets;
+
+  const infos = [
+    [
+      "Owner",
+      "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
+    ],
+    [
+      "Holder",
+      "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
+    ],
+    [
+      "Holder whitelisted",
+      "0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a",
+    ],
+    [
+      "Whitelisted",
+      "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6",
+    ],
+    [
+      "Other",
+      "0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a",
+    ],
+    [
+      "Multisig",
+      "0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba",
+    ],
+    [
+      "Sweeper",
+      "0x92db14e403b83dfe3df233f83dfa3a0d7096f21ca9b0d6d6b8d88b2b4ec1564e",
+    ],
+  ] satisfies [string, Hex][];
+
+  await Promise.all(
+    wallets.map(({ account: { address } }, i) => {
+      networkHelpers.setBalance(address, parseEther("1000"));
+
+      console.log(`Funded "${infos[i][0]}" ${address}`);
+    }),
+  );
+
+  return { owner, holder, holderWhitelisted, whitelisted, multisig, sweeper };
+}
+
+async function deployContracts(
+  viem: Awaited<ReturnType<typeof network.connect>>["viem"],
+  ownerAddress: Address,
+  multisigAddress: Address,
+) {
+  const lilBurn = await viem.deployContract("LilBurn", [ownerAddress]);
+  console.log(`LilBurn deployed at ${lilBurn.address}`);
+
+  await lilBurn.write.ownerMint([multisigAddress, 8n]);
+  console.log(`First 8 NFTs minted to ${multisigAddress}`);
+
+  const warChest = await viem.deployContract("WarChest", [ownerAddress]);
+  console.log(`WarChest deployed at ${warChest.address}`);
+
+  return { lilBurn, warChest };
+}
+
+async function setupMerkleTrees(
+  lilBurn: Awaited<
+    ReturnType<
+      Awaited<ReturnType<typeof network.connect>>["viem"]["deployContract"]
+    >
+  >,
+  holder: Address,
+  holderWhitelisted: Address,
+  whitelisted: Address,
+  webDataDir: string,
+) {
+  const holderTree = StandardMerkleTree.of<[`0x${string}`, bigint]>(
+    [
+      [holder, 3n],
+      [holderWhitelisted, 2n],
+    ],
+    ["address", "uint256"],
+  );
+
+  await lilBurn.write.setHolderMerkleRoot([holderTree.root as Address]);
+  console.log(`Holder merkle root ${holderTree.root}`);
+
+  const whitelistTree = StandardMerkleTree.of<[`0x${string}`]>(
+    [[holderWhitelisted], [whitelisted]],
+    ["address"],
+  );
+
+  await lilBurn.write.setWhitelistMerkleRoot([whitelistTree.root as Address]);
+  console.log(`Whitelist merkle root ${whitelistTree.root}`);
+
+  await mkdir(webDataDir, { recursive: true });
+  await Promise.all([
+    writeTree(holderTree, webDataDir, "holder-tree-localhost.json"),
+    writeTree(whitelistTree, webDataDir, "whitelist-tree-localhost.json"),
+  ]);
+  console.log(`Merkle trees written to ${webDataDir}`);
+}
+
+async function seedData(
+  lilBurn: Awaited<
+    ReturnType<
+      Awaited<ReturnType<typeof network.connect>>["viem"]["deployContract"]
+    >
+  >,
+  warChest: Awaited<
+    ReturnType<
+      Awaited<ReturnType<typeof network.connect>>["viem"]["deployContract"]
+    >
+  >,
+  holderAccount: { address: Address },
+) {
+  const mintPrice = await lilBurn.read.MINT_PRICE();
+
+  // ids 9–28
+  await lilBurn.write.publicMint([20n], {
+    account: holderAccount,
+    value: mintPrice * 20n,
+  });
+
+  await Promise.all([
+    Array.from({ length: 20 }).map((_, i) =>
+      lilBurn.write.burn([BigInt(9 + i)], { account: holderAccount }),
+    ),
+  ]);
+
+  // for (let i = 0; i < 10; ++i) {
+  //   await warChest.write.donate({
+  //     account: holderAccount,
+  //     value: parseEther("0.1"),
+  //   });
+  // }
+}
+
 async function startNetworkServer() {
   const { viem, networkHelpers, provider } =
     await network.connect(NETWORK_NAME);
@@ -102,200 +358,48 @@ async function startNetworkServer() {
 
   const server = await createJsonRpcServer(provider, "127.0.0.1", 8545);
 
-  const wallets = (await viem.getWalletClients()).slice(0, 6);
+  const { owner, multisig, holder, holderWhitelisted, whitelisted } =
+    await setupWallets(networkHelpers, await viem.getWalletClients());
 
-  const labels = [
-    "Owner",
-    "Holder",
-    "Holder whitelisted",
-    "Whitelisted",
-    "Other",
-    "Multisig",
-  ];
-
-  const pks = [
-    "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
-    "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
-    "0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a",
-    "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6",
-    "0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a",
-    "0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba",
-  ];
-
-  const [owner, holder, holderWhitelisted, whitelisted, other, multisig] =
-    wallets;
-
-  await Promise.all([
-    wallets.map(({ account: { address } }, i) => {
-      networkHelpers.setBalance(address, parseEther("1000"));
-
-      console.log(`1,000 AVAX sent to "${labels[i]}" ${address} ${pks[i]}`);
-    }),
-  ]);
-
-  const lilBurn = await viem.deployContract("LilBurn", [owner.account.address]);
-
-  console.log(`LilBurn deployed at ${lilBurn.address}`);
-
-  await lilBurn.write.ownerMint([multisig.account.address, 8n]);
-
-  console.log(`First 8 NFTs minted to ${multisig.account.address}`);
-
-  const holderTree = StandardMerkleTree.of<[`0x${string}`, bigint]>(
-    [
-      [holder.account.address, 3n],
-      [holderWhitelisted.account.address, 2n],
-    ],
-    ["address", "uint256"],
+  const { lilBurn, warChest } = await deployContracts(
+    viem,
+    owner.account.address,
+    multisig.account.address,
   );
-
-  await lilBurn.write.setHolderMerkleRoot([holderTree.root as Address]);
-
-  console.log(`Holder merkle root ${holderTree.root}`);
-
-  const whitelistTree = StandardMerkleTree.of<[`0x${string}`]>(
-    [[holderWhitelisted.account.address], [whitelisted.account.address]],
-    ["address"],
-  );
-
-  await lilBurn.write.setWhitelistMerkleRoot([whitelistTree.root as Address]);
-
-  console.log(`Whitelist merkle root ${whitelistTree.root}`);
 
   const webDataDir = join(dirname(fileURLToPath(import.meta.url)), WEBDATA_DIR);
 
-  await mkdir(webDataDir, { recursive: true });
-
-  function writeTree(tree: StandardMerkleTree<any>, name: string) {
-    return writeFile(
-      join(webDataDir, name),
-      JSON.stringify(tree.dump(), (_, value: unknown) =>
-        typeof value === "bigint" ? value.toString() : value,
-      ),
-    );
-  }
-
-  await writeTree(holderTree, "holder-tree-localhost.json");
-
-  await writeTree(whitelistTree, "whitelist-tree-localhost.json");
-
-  console.log(`Merkle trees written to ${webDataDir}`);
+  await setupMerkleTrees(
+    lilBurn,
+    holder.account.address,
+    holderWhitelisted.account.address,
+    whitelisted.account.address,
+    webDataDir,
+  );
 
   await lilBurn.write.setBaseURI([`http://127.0.0.1:${METADATA_PORT}/`]);
-
   console.log(`Base url set to http://127.0.0.1:${METADATA_PORT}`);
 
   const publicClient = await viem.getPublicClient();
-
   const now = (await publicClient.getBlock()).timestamp;
 
-  const holderStart = now + 60n;
-  const whitelistStart = now + 60n * 2n;
-  const publicStart = now + 60n * 3n;
-
-  await lilBurn.write.setPhaseSchedule([
-    holderStart,
-    whitelistStart,
-    publicStart,
-  ]);
+  await lilBurn.write.setPhaseSchedule([now - 3n, now - 2n, now - 1n]);
 
   console.log("Mint phase schedule set to public");
 
-  const warChest = await viem.deployContract("WarChest", [
-    owner.account.address,
-  ]);
+  await seedData(lilBurn, warChest, holder.account);
 
-  console.log(`WarChest deployed at ${warChest.address}`);
+  // only start listening once the nextjs server is up
+  setTimeout(() => {
+    watchAlchemyWebhook(
+      publicClient,
+      [lilBurn.address, warChest.address],
+      DONATIONS_WEBHOOK_URL,
+      DONATIONS_SIGNING_KEY,
+    );
 
-  publicClient.watchContractEvent({
-    address: warChest.address,
-    abi: warChest.abi,
-    eventName: "Donated",
-    onLogs: async (logs) => {
-      for (const log of logs) {
-        const [block, tx, receipt] = await Promise.all([
-          publicClient.getBlock({ blockNumber: log.blockNumber }),
-          publicClient.getTransaction({ hash: log.transactionHash }),
-          publicClient.getTransactionReceipt({ hash: log.transactionHash }),
-        ]);
-
-        const payloadObj: AlchemyWebhookPayload = {
-          webhookId: "wh_local",
-          id: `whevt_${log.transactionHash}`,
-          createdAt: new Date().toISOString(),
-          type: "GRAPHQL",
-          event: {
-            sequenceNumber: "0",
-            network: "LOCALHOST",
-            data: {
-              block: {
-                hash: block.hash!,
-                number: Number(block.number),
-                timestamp: Number(block.timestamp),
-                logs: [
-                  {
-                    data: log.data,
-                    topics: log.topics,
-                    index: log.logIndex,
-                    transaction: {
-                      hash: log.transactionHash,
-                      nonce: tx.nonce,
-                      index: receipt.transactionIndex,
-                      from: { address: tx.from },
-                      to: { address: tx.to! },
-                      value: `0x${tx.value.toString(16)}`,
-                      gasPrice: `0x${tx.gasPrice!.toString(16)}`,
-                      maxFeePerGas: `0x${(tx.maxFeePerGas ?? tx.gasPrice!).toString(16)}`,
-                      maxPriorityFeePerGas: `0x${(tx.maxPriorityFeePerGas ?? 0n).toString(16)}`,
-                      gas: Number(tx.gas),
-                      status: receipt.status === "success" ? 1 : 0,
-                      gasUsed: Number(receipt.gasUsed),
-                      cumulativeGasUsed: Number(receipt.cumulativeGasUsed),
-                      effectiveGasPrice: `0x${receipt.effectiveGasPrice.toString(16)}`,
-                      createdContract: receipt.contractAddress ?? null,
-                    },
-                    account: { address: warChest.address },
-                  },
-                ],
-              },
-            },
-          },
-        };
-
-        const payload = JSON.stringify(payloadObj);
-
-        const signature = createHmac("sha256", DONATIONS_SIGNING_KEY)
-          .update(payload)
-          .digest("hex");
-
-        await fetch(DONATIONS_WEBHOOK_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-alchemy-signature": signature,
-          },
-          body: payload,
-        }).catch((err) =>
-          console.warn(`Webhook forward failed: ${err.message}`),
-        );
-      }
-    },
-  });
-
-  // setTimeout(() => {
-  //   function donate() {
-  //     warChest.write.donate({
-  //       account: owner.account,
-  //       value: parseEther("0.1"),
-  //     });
-  //   }
-
-  //   donate();
-
-  //   setInterval(donate, 10000);
-  // }, 5000);
-
-  console.log(`Started webhook notify on ${DONATIONS_WEBHOOK_URL}`);
+    console.log(`Started webhook notify on ${DONATIONS_WEBHOOK_URL}`);
+  }, 2000);
 
   return server;
 }

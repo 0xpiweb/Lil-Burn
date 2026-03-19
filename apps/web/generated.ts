@@ -16,6 +16,21 @@ import {
  */
 export const lilBurnAbi = [
   {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      { name: "from", internalType: "address", type: "address", indexed: true },
+      { name: "to", internalType: "address", type: "address", indexed: true },
+      {
+        name: "tokenId",
+        internalType: "uint256",
+        type: "uint256",
+        indexed: true,
+      },
+    ],
+    name: "Transfer",
+  },
+  {
     type: "function",
     inputs: [],
     name: "MAX_PUBLIC_MINT",
@@ -42,6 +57,13 @@ export const lilBurnAbi = [
     name: "balanceOf",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
     stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [{ name: "tokenId", internalType: "uint256", type: "uint256" }],
+    name: "burn",
+    outputs: [],
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -179,7 +201,7 @@ export const lilBurnConfig = {
 
 /**
  * -
- * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7)
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0x686F9aA85863D9153ccFc70D860F033a0a486ae3)
  * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0x0000000000000000000000000000000000000000)
  */
 export const warChestAbi = [
@@ -232,21 +254,7 @@ export const warChestAbi = [
   {
     type: "function",
     inputs: [],
-    name: "totalDonated",
-    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    inputs: [],
-    name: "totalDonations",
-    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    inputs: [],
-    name: "totalDonors",
+    name: "nextEpochStart",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
     stateMutability: "view",
   },
@@ -254,18 +262,18 @@ export const warChestAbi = [
 
 /**
  * -
- * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7)
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0x686F9aA85863D9153ccFc70D860F033a0a486ae3)
  * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0x0000000000000000000000000000000000000000)
  */
 export const warChestAddress = {
-  31337: "0x0165878A594ca255338adfa4d48449f69242Eb8F",
-  43113: "0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7",
+  31337: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+  43113: "0x686F9aA85863D9153ccFc70D860F033a0a486ae3",
   43114: "0x0000000000000000000000000000000000000000",
 } as const;
 
 /**
  * -
- * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7)
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0x686F9aA85863D9153ccFc70D860F033a0a486ae3)
  * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0x0000000000000000000000000000000000000000)
  */
 export const warChestConfig = {
@@ -497,6 +505,19 @@ export const writeLilBurn = /*#__PURE__*/ createWriteContract({
 });
 
 /**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link lilBurnAbi}__ and `functionName` set to `"burn"`
+ *
+ * -
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xEff143eF02060C8e3D2412299f04054BC1b603E5)
+ * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0xF3513f263994A3536cc0A684209013d6808fE443)
+ */
+export const writeLilBurnBurn = /*#__PURE__*/ createWriteContract({
+  abi: lilBurnAbi,
+  address: lilBurnAddress,
+  functionName: "burn",
+});
+
+/**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link lilBurnAbi}__ and `functionName` set to `"holderMint"`
  *
  * -
@@ -548,6 +569,19 @@ export const simulateLilBurn = /*#__PURE__*/ createSimulateContract({
 });
 
 /**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link lilBurnAbi}__ and `functionName` set to `"burn"`
+ *
+ * -
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xEff143eF02060C8e3D2412299f04054BC1b603E5)
+ * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0xF3513f263994A3536cc0A684209013d6808fE443)
+ */
+export const simulateLilBurnBurn = /*#__PURE__*/ createSimulateContract({
+  abi: lilBurnAbi,
+  address: lilBurnAddress,
+  functionName: "burn",
+});
+
+/**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link lilBurnAbi}__ and `functionName` set to `"holderMint"`
  *
  * -
@@ -588,10 +622,33 @@ export const simulateLilBurnWhitelistMint =
   });
 
 /**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link lilBurnAbi}__
+ *
+ * -
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xEff143eF02060C8e3D2412299f04054BC1b603E5)
+ * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0xF3513f263994A3536cc0A684209013d6808fE443)
+ */
+export const watchLilBurnEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: lilBurnAbi,
+  address: lilBurnAddress,
+});
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link lilBurnAbi}__ and `eventName` set to `"Transfer"`
+ *
+ * -
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xEff143eF02060C8e3D2412299f04054BC1b603E5)
+ * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0xF3513f263994A3536cc0A684209013d6808fE443)
+ */
+export const watchLilBurnTransferEvent = /*#__PURE__*/ createWatchContractEvent(
+  { abi: lilBurnAbi, address: lilBurnAddress, eventName: "Transfer" },
+);
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link warChestAbi}__
  *
  * -
- * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7)
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0x686F9aA85863D9153ccFc70D860F033a0a486ae3)
  * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0x0000000000000000000000000000000000000000)
  */
 export const readWarChest = /*#__PURE__*/ createReadContract({
@@ -603,7 +660,7 @@ export const readWarChest = /*#__PURE__*/ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link warChestAbi}__ and `functionName` set to `"MIN_DONATION"`
  *
  * -
- * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7)
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0x686F9aA85863D9153ccFc70D860F033a0a486ae3)
  * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0x0000000000000000000000000000000000000000)
  */
 export const readWarChestMinDonation = /*#__PURE__*/ createReadContract({
@@ -616,7 +673,7 @@ export const readWarChestMinDonation = /*#__PURE__*/ createReadContract({
  * Wraps __{@link readContract}__ with `abi` set to __{@link warChestAbi}__ and `functionName` set to `"currentEpoch"`
  *
  * -
- * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7)
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0x686F9aA85863D9153ccFc70D860F033a0a486ae3)
  * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0x0000000000000000000000000000000000000000)
  */
 export const readWarChestCurrentEpoch = /*#__PURE__*/ createReadContract({
@@ -626,49 +683,23 @@ export const readWarChestCurrentEpoch = /*#__PURE__*/ createReadContract({
 });
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link warChestAbi}__ and `functionName` set to `"totalDonated"`
+ * Wraps __{@link readContract}__ with `abi` set to __{@link warChestAbi}__ and `functionName` set to `"nextEpochStart"`
  *
  * -
- * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7)
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0x686F9aA85863D9153ccFc70D860F033a0a486ae3)
  * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0x0000000000000000000000000000000000000000)
  */
-export const readWarChestTotalDonated = /*#__PURE__*/ createReadContract({
+export const readWarChestNextEpochStart = /*#__PURE__*/ createReadContract({
   abi: warChestAbi,
   address: warChestAddress,
-  functionName: "totalDonated",
-});
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link warChestAbi}__ and `functionName` set to `"totalDonations"`
- *
- * -
- * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7)
- * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0x0000000000000000000000000000000000000000)
- */
-export const readWarChestTotalDonations = /*#__PURE__*/ createReadContract({
-  abi: warChestAbi,
-  address: warChestAddress,
-  functionName: "totalDonations",
-});
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link warChestAbi}__ and `functionName` set to `"totalDonors"`
- *
- * -
- * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7)
- * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0x0000000000000000000000000000000000000000)
- */
-export const readWarChestTotalDonors = /*#__PURE__*/ createReadContract({
-  abi: warChestAbi,
-  address: warChestAddress,
-  functionName: "totalDonors",
+  functionName: "nextEpochStart",
 });
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link warChestAbi}__
  *
  * -
- * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7)
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0x686F9aA85863D9153ccFc70D860F033a0a486ae3)
  * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0x0000000000000000000000000000000000000000)
  */
 export const writeWarChest = /*#__PURE__*/ createWriteContract({
@@ -680,7 +711,7 @@ export const writeWarChest = /*#__PURE__*/ createWriteContract({
  * Wraps __{@link writeContract}__ with `abi` set to __{@link warChestAbi}__ and `functionName` set to `"donate"`
  *
  * -
- * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7)
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0x686F9aA85863D9153ccFc70D860F033a0a486ae3)
  * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0x0000000000000000000000000000000000000000)
  */
 export const writeWarChestDonate = /*#__PURE__*/ createWriteContract({
@@ -693,7 +724,7 @@ export const writeWarChestDonate = /*#__PURE__*/ createWriteContract({
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link warChestAbi}__
  *
  * -
- * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7)
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0x686F9aA85863D9153ccFc70D860F033a0a486ae3)
  * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0x0000000000000000000000000000000000000000)
  */
 export const simulateWarChest = /*#__PURE__*/ createSimulateContract({
@@ -705,7 +736,7 @@ export const simulateWarChest = /*#__PURE__*/ createSimulateContract({
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link warChestAbi}__ and `functionName` set to `"donate"`
  *
  * -
- * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7)
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0x686F9aA85863D9153ccFc70D860F033a0a486ae3)
  * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0x0000000000000000000000000000000000000000)
  */
 export const simulateWarChestDonate = /*#__PURE__*/ createSimulateContract({
@@ -718,7 +749,7 @@ export const simulateWarChestDonate = /*#__PURE__*/ createSimulateContract({
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link warChestAbi}__
  *
  * -
- * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7)
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0x686F9aA85863D9153ccFc70D860F033a0a486ae3)
  * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0x0000000000000000000000000000000000000000)
  */
 export const watchWarChestEvent = /*#__PURE__*/ createWatchContractEvent({
@@ -730,7 +761,7 @@ export const watchWarChestEvent = /*#__PURE__*/ createWatchContractEvent({
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link warChestAbi}__ and `eventName` set to `"Donated"`
  *
  * -
- * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0xAA0EA56C3BAc0102FFb0f739029413F6511aa4A7)
+ * - [__View Contract on Avalanche Fuji Snow Trace__](https://testnet.snowtrace.io/address/0x686F9aA85863D9153ccFc70D860F033a0a486ae3)
  * - [__View Contract on Avalanche Snow Trace__](https://snowtrace.io/address/0x0000000000000000000000000000000000000000)
  */
 export const watchWarChestDonatedEvent = /*#__PURE__*/ createWatchContractEvent(

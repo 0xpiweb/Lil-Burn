@@ -1,7 +1,7 @@
-import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
+import { LayoutFooter } from "@/components/layout/LayoutFooter";
+import { LayoutHeader } from "@/components/layout/LayoutHeader";
 import { Providers } from "@/components/Providers";
-import { ScratchesOverlay } from "@/components/ScratchesOverlay";
+import { ScratchesOverlay } from "@/components/ui/ScratchesOverlay";
 import { getWagmiConfig } from "@/lib/wagmi.client";
 import type { Metadata } from "next";
 import { Bebas_Neue, Geist, Geist_Mono } from "next/font/google";
@@ -48,11 +48,11 @@ export default async function RootLayout({
         <ScratchesOverlay />
 
         <Providers initialState={initialState}>
-          <Header />
+          <LayoutHeader />
 
           {children}
 
-          <Footer />
+          <LayoutFooter />
         </Providers>
       </body>
     </html>

@@ -6,30 +6,33 @@ export async function register() {
       return;
     }
 
-    if (process.env.NODE_ENV === "development" && url.startsWith("file:")) {
-      process.stdout.write(`Deleting ${url}... `);
-
+    if (
+      process.env.NODE_ENV === "development" &&
+      url.startsWith("file:") &&
+      process.env.RESET_DB === "true"
+    ) {
       const path = url.slice("file:".length);
 
       const { unlink } = await import("node:fs/promises");
 
       await unlink(path).catch(() => {});
 
-      console.log("done.");
+      console.log(`[db] Deleted ${path}`);
     }
 
-    process.stdout.write(`Migrating ${url}... `);
-
     const { db } = await import("./db/drizzle");
-
     const { migrate } = await import("drizzle-orm/libsql/migrator");
 
     await migrate(db, { migrationsFolder: "./db/migrations" });
 
-    console.log("done.");
+    console.log("[db] Migrations ran");
 
-    const { backfillDonations } = await import("./scripts/backfillDonations");
+    const { backfill } = await import("./lib/backfill");
 
-    await backfillDonations();
+    await backfill();
+
+    const { seed } = await import("./lib/seeds");
+
+    await seed();
   }
 }
