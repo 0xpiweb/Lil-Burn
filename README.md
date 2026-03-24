@@ -176,3 +176,10 @@ When the supply hits 100, the burn stops.
 - Socials:
 [Twitter](https://x.com/LilCoqNft)
 [Discord](https://discord.gg/uKSF7R2dJd)
+
+---
+
+### 🌐 Ecosystem Portfolio
+Lil-Burn is built by the team behind the **$LIL Ecosystem**. As a showcase of our commitment to high-fidelity UI and transparency on Avalanche, you can view our live data dashboard here:
+
+🔗 **[$LIL Hub — Live Dashboard](https://lil-hub.vercel.app/)**
